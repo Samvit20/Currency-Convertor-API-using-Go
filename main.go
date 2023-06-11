@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 	"github.com/gorilla/mux"
+	"os"
 )
 type CurrencyConversionResponse struct {
 	Success bool              `json:"success"`
@@ -13,7 +14,7 @@ type CurrencyConversionResponse struct {
 	Error   string            `json:"error"`
 }
 
-const currencyConverterAPIURL = "https://free.currconv.com/api/v7/convert"
+const currencyConvertorAPI = "https://free.currconv.com/api/v7/convert"
 
 func main() {
 	router := mux.NewRouter()
@@ -27,8 +28,10 @@ func handleConvert(w http.ResponseWriter, r *http.Request) {
 	from := params.Get("from")
 	to := params.Get("to")
 	amount := params.Get("amount")
+
+	api_key := os.Getenv("API_KEY")
 	
-	response, err := http.Get(fmt.Sprintf("%s?q=%s_%s&compact=ultra&apiKey=<YOUR_API_KEY>", currencyConverterAPIURL, from, to))
+	response, err := http.Get(fmt.Sprintf("%s?q=%s_%s&compact=ultra&apiKey=%s", currencyConvertorAPI, from, to, api_key))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
