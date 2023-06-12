@@ -1,12 +1,15 @@
 package main
+
 import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
-	"strconv"
-	"github.com/gorilla/mux"
 	"os"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 type CurrencyConversionResponse struct {
 	Success bool              `json:"success"`
@@ -19,7 +22,8 @@ const currencyConvertorAPI = "https://free.currconv.com/api/v7/convert"
 func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/convert", handleConvert).Methods("GET")
-	http.ListenAndServe(":8080", router)
+	log.Println("Webserver started on 8080!")
+	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
 func handleConvert(w http.ResponseWriter, r *http.Request) {
